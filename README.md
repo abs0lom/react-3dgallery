@@ -4,7 +4,7 @@
 
 ## Demo
 
-comming soon
+[live demo](https://abs0lom.github.io/react-3dgallery/)
 
 ## Install
 
