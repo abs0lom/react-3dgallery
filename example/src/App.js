@@ -14,7 +14,7 @@ export default class App extends Component {
             {src: 'https://cdn.pixabay.com/photo/2016/11/29/04/19/beach-1867285_960_720.jpg'},
             {src: 'https://cdn.pixabay.com/photo/2018/01/14/23/12/nature-3082832_960_720.jpg'},
           ]}
-          backButton={({className}) => <button className={className} onClick={() => console.log("back action")}>Back</button>}
+          backButton={({className}) => <button className={className} onClick={() => window.location.href = "https://github.com/abs0lom/react-3dgallery"}>Back</button>}
         />
       </div>
     )
