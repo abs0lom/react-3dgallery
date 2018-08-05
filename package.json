@@ -1,6 +1,6 @@
 {
   "name": "@absolom/react-3dgallery",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "3d gallery react component",
   "author": "abs0lom",
   "license": "MIT",
@@ -25,7 +25,6 @@
     "prop-types": "^15.5.4",
     "react": "^15.0.0 || ^16.0.0",
     "react-dom": "^15.0.0 || ^16.0.0",
-    "semantic-ui-react": "^0.82.1",
     "styled-components": "^3.4.1"
   },
   "devDependencies": {

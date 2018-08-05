@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import ExampleComponent from 'react-3dgallery'
+import ExampleComponent from '@absolom/react-3dgallery'
 
 export default class App extends Component {
   render () {
