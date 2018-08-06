@@ -1,4 +1,4 @@
-# react-3dgallery [![NPM](https://img.shields.io/npm/v/@absolom/react-3dgallery.svg)](https://www.npmjs.com/package/react-3dgallery) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+# react-3dgallery [![NPM](https://img.shields.io/npm/v/%40absolom/react-3dgallery.svg)](https://www.npmjs.com/package/%40absolom/react-3dgallery) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 > an adaptation of [this gallery](https://www.script-tutorials.com/3d-gallery-using-javascript/)
 
