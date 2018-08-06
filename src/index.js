@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import styled from 'styled-components'
 
 class D3Gallery extends Component {
   static propTypes = {
     images: PropTypes.arrayOf(PropTypes.shape({
       src: PropTypes.string.isRequired,
-      text: PropTypes.string,
+      text: PropTypes.string
     })).isRequired,
     background: PropTypes.shape({
       color: PropTypes.string,
-      image: PropTypes.string,
+      image: PropTypes.string
     }),
-    backButton: PropTypes.element,
+    backButton: PropTypes.function
   };
 
   state = {
@@ -20,168 +20,131 @@ class D3Gallery extends Component {
     ym: 0,
     cx: 0,
     cy: 0,
-    nx: 0,
-    ny: 0,
-    nw: 0,
-    nh: 0,
     S: 0,
     xt: 0,
     yt: 0,
     zt: 0,
-    zoom: 1,
     objects: [],
     x: 0,
     y: 0,
-    z: -30000,
+    z: -30000
   }
 
   componentDidMount() {
     document.onmousemove = (e) => {
-      const {
-        nx, nw, ny, nh,
-      } = this.state;
-      if (window.event) e = window.event;
+      if (window.event) e = window.event
       this.setState({
-        xm: (e.x || e.clientX) - nx - nw * 0.5,
-        ym: (e.y || e.clientY) - ny - nh * 0.5,
-      });
-    };
-    this.resize();
-    const {
-      nw,
-      nh,
-      objects,
-      zoom,
-    } = this.state;
-    const img = this.galRef.getElementsByTagName('img');
-    const span = this.galRef.getElementsByTagName('span');
-    const { length } = img;
+        xm: (e.x || e.clientX) - this.galRef.offsetLeft - this.galRef.offsetWidth * 0.5,
+        ym: (e.y || e.clientY) - this.galRef.offsetTop - this.galRef.offsetHeight * 0.5
+      })
+    }
+    const { objects } = this.state
+    const zoom = this.galRef.offsetHeight / 900
+    const img = this.galRef.getElementsByTagName('img')
+    const span = this.galRef.getElementsByTagName('span')
+    const { length } = img
     for (let i = 0; i < length; i++) {
       objects[i] = {
-        n: i,
-        x: zoom * Math.random() * nw * 3 - nw,
-        y: zoom * Math.random() * nh * 3 - nh,
+        x: zoom * Math.random() * this.galRef.offsetWidth * 3 - this.galRef.offsetWidth,
+        y: zoom * Math.random() * this.galRef.offsetHeight * 3 - this.galRef.offsetHeight,
+        width: img[i].naturalWidth,
+        height: img[i].naturalHeight,
         z: Math.round(i * (10000 / length)),
-        w: img[i].width,
-        h: img[i].height,
+        img: img[i],
         oxt: span[i],
-        oxs: span[i].style,
-        obj: img[i],
-        obs: img[i].style,
-        F: false,
-        CF: 100,
-        sto: [],
-      };
-      const zIndex = Math.round(1000000 - objects[i].z);
-      if (objects[i].oxt.innerHTML === '') {
-        objects[i].oxt.style.display = 'none';
+        oxs: span[i].style
       }
-      objects[i].oxt.style.zIndex = zIndex;
-      objects[i].obj.style.zIndex = zIndex;
-      objects[i].obj.parent = this;
-      objects[i].obj.alt = i;
-      objects[i].obj.onclick = e => this.click(e.target.alt);
-      objects[i].obj.ondrag = () => false;
+      const zIndex = Math.round(1000000 - objects[i].z)
+      if (objects[i].oxt.innerHTML === '') {
+        objects[i].oxt.style.display = 'none'
+      }
+      objects[i].oxt.style.zIndex = zIndex
+      objects[i].img.style.zIndex = zIndex
+      objects[i].img.parent = this
+      objects[i].img.alt = i
+      objects[i].img.onclick = e => this.click(e.target.alt)
+      objects[i].img.ondrag = () => false
     }
     this.setState({
-      cx: nw / 2,
-      cy: nh / 2,
-    });
-    this.run();
-    this.click(0);
+      cx: this.galRef.offsetWidth / 2,
+      cy: this.galRef.offsetHeight / 2
+    })
+    this.run()
+    this.click(0)
   }
 
   componentDidUpdate() {
-    this.resize();
   }
 
   galRef = null;
 
   toPx = x => ''.concat(Math.round(x), 'px');
 
-  resize = () => {
-    const {
-      nx, ny, nw, nh,
-    } = this.state;
-    const nnh = this.galRef.offsetHeight;
-    if (nx !== this.galRef.offsetLeft
-    || ny !== this.galRef.offsetTop
-    || nw !== this.galRef.offsetWidth
-    || nh !== nnh) {
-      this.setState({
-        nx: this.galRef.offsetLeft,
-        ny: this.galRef.offsetTop,
-        nw: this.galRef.offsetWidth,
-        nh: nnh,
-        zoom: nnh / 900,
-      });
-    }
-  }
-
   run = () => {
     const {
-      cx, xm, ym, cy, xt, yt, zt, x, y, z, objects: { length },
-    } = this.state;
+      cx, xm, ym, cy, xt, yt, zt, x, y, z, objects: { length }
+    } = this.state
     this.setState({
       cx: cx + (xm - cx) * 0.1,
       cy: cy + (ym - cy) * 0.1,
       x: x + (xt - x) * 0.05,
       y: y + (yt - y) * 0.05,
-      z: z + (zt - z) * 0.02,
-    });
-    let i = length;
-    while (i--) this.anim(i);
-    setTimeout(this.run, 16);
+      z: z + (zt - z) * 0.02
+    })
+    let i = length
+    while (i--) this.anim(i)
+    setTimeout(this.run, 16)
   }
 
   anim = (n) => {
     const {
-      objects, zoom, nw, nh, z, cx, cy, zt, x, y,
-    } = this.state;
-    const o = objects[n];
-    const f = 700 + o.z - z;
+      objects, z, cx, cy, x, y
+    } = this.state
+    const zoom = this.galRef.offsetHeight / 900
+    const f = 700 + objects[n].z - z
     if (f > 0) {
-      const d = 1000 / f;
-      const X = nw * 0.5 + ((o.x - x - cx) * d);
-      const Y = nh * 0.5 + ((o.y - y - cy) * d);
-      const W = d * o.w * zoom;
-      const H = d * o.h * zoom;
-      o.obs.left = this.toPx(X - W * 0.5);
-      o.obs.top = this.toPx(Y - H * 0.5);
-      o.obs.width = this.toPx(W);
-      o.obs.height = this.toPx(H);
-      o.oxs.left = this.toPx(X - W * 0.5);
-      o.oxs.top = this.toPx(Y + H * 0.5);
-      o.oxs.fontSize = this.toPx(1 + d * 20 * zoom);
-      o.oxs.lineHeight = o.oxs.fontSize;
+      const d = 1000 / f
+      const X = this.galRef.offsetWidth * 0.5 + ((objects[n].x - x - cx) * d)
+      const Y = this.galRef.offsetHeight * 0.5 + ((objects[n].y - y - cy) * d)
+      const W = d * objects[n].width * zoom
+      const H = d * objects[n].height * zoom
+      objects[n].img.style.left = this.toPx(X - W * 0.5)
+      objects[n].img.style.top = this.toPx(Y - H * 0.5)
+      objects[n].img.style.width = this.toPx(W)
+      objects[n].img.style.height = this.toPx(H)
+      objects[n].oxs.left = this.toPx(X - W * 0.5)
+      objects[n].oxs.top = this.toPx(Y + H * 0.5)
+      objects[n].oxs.fontSize = this.toPx(1 + d * 20 * zoom)
+      objects[n].oxs.lineHeight = objects[n].oxs.fontSize
     } else {
-      o.x = zoom * Math.random() * nw * 3 - nw;
-      o.y = zoom * Math.random() * nh * 3 - nh;
-      o.z += 10000;
-      o.oxs.zIndex = Math.round(1000000 - o.z);
-      o.obs.zIndex = Math.round(1000000 - o.z);
+      objects[n].x = zoom * Math.random() * this.galRef.offsetWidth * 3 - this.galRef.offsetWidth
+      objects[n].y = zoom * Math.random() * this.galRef.offsetHeight * 3 - this.galRef.offsetHeight
+      objects[n].z += 10000
+      objects[n].oxs.zIndex = Math.round(1000000 - objects[n].z)
+      objects[n].img.style.zIndex = Math.round(1000000 - objects[n].z)
     }
+    // this.setState({objects})
   };
 
   click = (n) => {
     const {
-      objects, zt, S,
-    } = this.state;
-    const o = objects[n];
+      objects, zt, S
+    } = this.state
+    const o = objects[n]
     if (S !== o) {
       this.setState({
         xt: o.x,
         yt: o.y,
         zt: o.z,
-        S: o,
-      });
+        S: o
+      })
     } else {
       this.setState({
         xt: o.x,
         yt: o.y,
         zt: zt + 1600,
-        S: 0,
-      });
+        S: 0
+      })
     }
   };
 
@@ -189,17 +152,17 @@ class D3Gallery extends Component {
     const {
       className,
       images,
-      backButton,
-    } = this.props;
+      backButton
+    } = this.props
     return (
-      <div ref={(e) => { this.galRef = e; }} className={className} >
+      <div ref={(e) => { this.galRef = e }} className={className} >
         {backButton({className: 'button'})}
-        {images.map(({ src, text }) => [
-          <img src={src} alt="" />,
-          <span>{text}</span>,
+        {images.map(({ src, text }, key) => [
+          <img src={src} alt='' key={'img' + key} />,
+          <span key={'span' + key} >{text}</span>
         ])}
       </div>
-    );
+    )
   }
 }
 
@@ -234,5 +197,4 @@ export default styled(D3Gallery)`
     color: white;
     background-color: #00000090;
   }
-`;
-
+`
