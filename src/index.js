@@ -47,8 +47,6 @@ class D3Gallery extends Component {
       objects[i] = {
         x: zoom * Math.random() * this.galRef.offsetWidth * 3 - this.galRef.offsetWidth,
         y: zoom * Math.random() * this.galRef.offsetHeight * 3 - this.galRef.offsetHeight,
-        width: img[i].naturalWidth,
-        height: img[i].naturalHeight,
         z: Math.round(i * (10000 / length)),
         img: img[i],
         oxt: span[i],
@@ -106,8 +104,8 @@ class D3Gallery extends Component {
       const d = 1000 / f
       const X = this.galRef.offsetWidth * 0.5 + ((objects[n].x - x - cx) * d)
       const Y = this.galRef.offsetHeight * 0.5 + ((objects[n].y - y - cy) * d)
-      const W = d * objects[n].width * zoom
-      const H = d * objects[n].height * zoom
+      const W = d * objects[n].img.naturalWidth * zoom
+      const H = d * objects[n].img.naturalHeight * zoom
       objects[n].img.style.left = this.toPx(X - W * 0.5)
       objects[n].img.style.top = this.toPx(Y - H * 0.5)
       objects[n].img.style.width = this.toPx(W)

@@ -1,6 +1,6 @@
 {
   "name": "@absolom/react-3dgallery",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "3d gallery react component",
   "author": "abs0lom",
   "license": "MIT",
@@ -57,8 +57,5 @@
   },
   "files": [
     "dist"
-  ],
-  "dependencies": {
-    "ajv": "^6.5.2"
-  }
+  ]
 }
