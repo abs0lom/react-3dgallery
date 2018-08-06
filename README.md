@@ -58,9 +58,10 @@ backButton // a React element, like a button or link (required)
 
 ## To-do
 
-* add a non-fullscreen option
-* fix the alignment of images on startup
-* fix the display of images on refresh
+* add option to set corner where the back button appears
+* add option to set fullscreen display
+* change the names of the variables for more explicit names
+* continue to adapt the code to React logic
 
 ## License
 
